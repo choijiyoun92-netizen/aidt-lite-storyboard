@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AIDT 스토리보드 – 홈</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+    }
+
+    /* ===== 공통 ===== */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* ===== 1단 GNB ===== */
+    .gnb-top {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 64px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .gnb-left {
+      display: flex;
+      gap: 24px;
+      font-weight: 600;
+    }
+
+    .gnb-left span.active {
+      color: #2563eb;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 4px;
+    }
+
+    .gnb-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-end {
+      background: #e5e7eb;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn-start {
+      background: #1f2a5a;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #f1f3f5;
+      font-size: 16px;
+    }
+
+    .class-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    .class-status .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #9ca3af;
+    }
+
+
+    /* ===== 2단 GNB ===== */
+    .gnb-sub {
+      background: #eaf2ff;
+      padding: 0 24px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .gnb-sub span.active {
+      color: #2563eb;
+    }
+
+    /* ===== 메인 더미 ===== */
+    .content {
+      padding: 32px 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      max-width: 900px;
+    }
+
+    .dashboard {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.main-area {
+  flex: 1;
+}
+
+.side-area {
+  width: 280px;
+}
+
+.notice {
+  margin-bottom: 24px;
+}
+
+.notice p {
+  margin-top: 8px;
+  color: #555;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-btn {
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.class-box {
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.badge {
+  display: inline-block;
+  background: #d1fae5;
+  color: #047857;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.teacher .class-name {
+  display: block;
+  margin: 6px 0 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.quick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.quick-item {
+  background: #1f2a5a;
+  color: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.side-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.side-links li {
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+    /* ===== 모드 팝업 ===== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+  background: #fff;
+  width: 860px;          /* ⬅ 가로 확장 */
+  max-width: 92vw;       /* ⬅ 작은 화면 대응 */
+  border-radius: 16px;
+  padding: 28px 32px;    /* 좌우 여백 살짝 증가 */
+}
+
+    .mode {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: 140px; /* ← 가장 긴 카드 기준으로 조정 */
+}
+
+    .mode.active {
+      border-color: #2563eb;
+      background: #f3f6ff;
+    }
+
+    .confirm {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    /* ===== 팝업 2컬럼 레이아웃 ===== */
+.popup-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;   /* 컬럼 간 여백 증가 */
+  margin-top: 16px;
+}
+
+.popup-section h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+/* 하단 버튼 영역 */
+.popup-footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.popup-section + .popup-section {
+  border-left: 1px solid #e5e7eb;
+  padding-left: 28px;
+}
+
+.popup-desc {
+  min-height: 64px;   /* ← 두 설명 중 더 긴 쪽 기준 */
+  margin-bottom: 12px;
+}
+
+.popup-desc p {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+  </style>
+</head>
+<body>
+
+<!-- ===== 1단 GNB ===== -->
+<header class="gnb-top">
+  <div class="gnb-left">
+    <span class="active">홈</span>
+    <span>교과서</span>
+    <span>과제</span>
+    <span>평가</span>
+    <span>수업 자료실</span>
+  </div>
+
+  <div class="gnb-right">
+    <div class="class-status">
+        <span class="dot"></span>
+        수업 종료
+    </div>
+    <button class="btn-start">수업 시작</button>
+    <button class="icon-btn">🎧</button>
+    <button class="icon-btn">🔔</button>
+    <button class="icon-btn" id="openSetting">⚙️</button>
+  </div>
+</header>
+
+<!-- ===== 2단 GNB ===== -->
+<nav class="gnb-sub">
+  <span class="active">학급 현황</span>
+  <span>대시보드</span>
+  <span>리포트</span>
+</nav>
+
+<!-- ===== 메인 영역 (더미) ===== -->
+<main class="content dashboard">
+  <!-- 좌측 메인 -->
+  <section class="main-area">
+    <div class="card notice">
+      <strong>알림장</strong>
+      <p>오른쪽의 알림장 편집 버튼을 눌러 학생들에게 알림장을 전달해 보세요!</p>
+    </div>
+
+    <div class="card recent-class">
+      <div class="card-header">
+        <h2>가장 최근 수업</h2>
+        <button class="link-btn">수업 설계하기</button>
+      </div>
+
+      <div class="class-box">
+        <span class="badge">수업</span>
+        <p class="title">
+          Ⅰ. 수와 연산 &gt; 1. 소인수분해 &gt; 거듭제곱은 무엇일까?
+        </p>
+        <span class="meta">참여 인원 1 / 5</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 우측 사이드 -->
+  <aside class="side-area">
+    <div class="card teacher">
+      <strong>cleannmath013-t 선생님</strong>
+      <span class="class-name">1강의실</span>
+
+      <div class="quick">
+        <div class="quick-item">우리 반 마이룸</div>
+        <div class="quick-item">학생 오늘의 기분</div>
+      </div>
+
+      <ul class="side-links">
+        <li>🎯 학생 목표 설정</li>
+        <li>💗 학습심리성향검사</li>
+        <li>🏪 상점</li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="card" style="margin-top:32px;">
+  <strong>📘 스토리보드 설명</strong>
+
+  <ul style="font-size:14px; margin-top:12px; line-height:1.6;">
+    <li>
+      <strong>[기능 01]</strong><br />
+      플랫폼 최초 진입 시, 학습 환경 설정 팝업 노출<br />
+      (사용 모드 + 수업 중 알림 허용 여부)
+    </li>
+    <li>
+      <strong>[기능 01-1]</strong><br />
+      LITE 모드 기본 추천, 이후 언제든 설정 변경 가능
+    </li>
+    <li>
+      <strong>[기능 01-2]</strong><br />
+      알림 OFF 시에도 알림 목록은 축적됨 (토스트만 미노출)
+    </li>
+  </ul>
+  </div>
+</main>
+
+<!-- ===== 환경 설정 팝업 (스토리보드용) ===== -->
+<div class="modal show" id="modeModal">
+  <div class="modal-box">
+
+    <!-- 기능 번호 -->
+    <span style="font-size:12px; color:#6b7280;">기능 01</span>
+    <h2 style="margin-top:6px;">학습 환경 설정</h2>
+
+    <p style="font-size:14px; color:#555; line-height:1.5;">
+      <span style="font-size:12px; color:#6b7280;">
+        ※ 선택한 설정은 이후에도 언제든 변경할 수 있습니다.
+      </span>
+    </p>
+
+    <hr style="margin:20px 0;" />
+
+<!-- ===== 2컬럼 본문 ===== -->
+<div class="popup-body">
+
+  <!-- 좌측: 사용 모드 선택 -->
+  <div class="popup-section">
+    <h3 style="font-size:15px;">① 사용 모드 선택</h3>
+
+    <div class="popup-desc">
+    <p style="font-size:13px; color:#555;">
+      플랫폼을 보다 쉽고 편하게 이용하실 수 있도록<br />
+    두 가지 사용 모드를 제공합니다.<br />
+      수업 방식에 맞는 모드를 선택해 주세요.<br />
+    </p>
+    </div>
+
+    <div class="mode active" data-mode="lite">
+      <strong>🟢 LITE 모드 (기본 추천)</strong>
+      <p style="margin:8px 0 0; font-size:13px; color:#555;">
+        설정이 간소화된 이지 모드입니다.<br />
+        출제에 꼭 필요한 핵심 옵션만 제공되며,<br />
+        나머지 설정은 시스템이 자동으로 적용됩니다.
+      </p>
+      <p style="margin-top:6px; font-size:12px; color:#2563eb;">
+        처음 이용하시는 경우 / 빠르게 문제를 출제하고 싶은 경우 추천
+      </p>
+    </div>
+
+    <div class="mode" data-mode="basic">
+      <strong>🔵 기본 모드</strong>
+      <p style="margin:8px 0 0; font-size:13px; color:#555;">
+        모든 출제 옵션을 직접 설정할 수 있는 모드입니다.<br />
+        문항 구성과 조건을 세부적으로 조정하고 싶은 경우 선택해 주세요.
+      </p>
+    </div>
+
+    <p style="font-size:12px; color:#6b7280; margin-top:8px;">
+      · 기본 모드: 모든 옵션 직접 설정<br />
+      · LITE 모드: 옵션 선택 최소화 (일부 기능 제한)
+    </p>
+  </div>
+
+  <!-- 우측: 수업 중 알림 설정 -->
+  <div class="popup-section">
+    <h3 style="font-size:15px;">② 수업 중 알림 설정</h3>
+
+    <div class="popup-desc">
+    <p style="font-size:13px; color:#555;">
+      수업 중 알림이 자주 노출되면 수업에 방해가 될 수 있어<br />
+      알림 노출 여부를 선택할 수 있습니다.
+    </p>
+    </div>
+
+    <div class="mode active" data-alert="on">
+      <strong>🔔 알림 허용</strong>
+      <p style="font-size:12px; color:#555;">
+        수업 중에도 우측 하단에 알림 토스트가 표시됩니다.
+      </p>
+    </div>
+
+    <div class="mode" data-alert="off">
+      <strong>⛔ 알림 허용 안 함</strong>
+      <p style="font-size:12px; color:#555;">
+        수업 중에는 알림 토스트가 표시되지 않습니다.<br />
+        단, 우측 상단 알림 아이콘 클릭 시<br />
+        알림 목록은 그대로 확인할 수 있습니다.
+      </p>
+    </div>
+
+    <p style="font-size:12px; color:#6b7280;">
+      ※ 알림 설정은 언제든 설정 메뉴에서 변경할 수 있습니다.
+    </p>
+  </div>
+
+</div>
+
+<!-- ===== 하단 버튼 ===== -->
+<div class="popup-footer">
+  <button class="confirm">선택 완료</button>
+</div>
+</div>
+
+<script>
+  const modal = document.getElementById('modeModal');
+  const openSetting = document.getElementById('openSetting');
+
+  let selectedMode = 'lite';
+  let alertSetting = 'on';
+
+  // QA용: 페이지 진입 시 항상 팝업 노출
+  modal.classList.add('show');
+
+  openSetting.onclick = () => {
+    modal.classList.add('show');
+  };
+
+  // 모드 / 알림 선택 처리
+  document.querySelectorAll('.mode').forEach(el => {
+    el.onclick = () => {
+      const parent = el.parentElement;
+      const group = el.dataset.mode ? 'mode' : 'alert';
+
+      parent.querySelectorAll(`[data-${group}]`).forEach(m =>
+        m.classList.remove('active')
+      );
+
+      el.classList.add('active');
+
+      if (el.dataset.mode) selectedMode = el.dataset.mode;
+      if (el.dataset.alert) alertSetting = el.dataset.alert;
+    };
+  });
+
+  document.querySelector('.confirm').onclick = () => {
+    localStorage.setItem('aidt_mode', selectedMode);
+    localStorage.setItem('aidt_alert', alertSetting);
+    modal.classList.remove('show');
+  };
+</script>
+
+</body>
+</html>
