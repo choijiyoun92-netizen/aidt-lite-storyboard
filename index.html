@@ -310,6 +310,388 @@
   margin: 0;
   line-height: 1.5;
 }
+
+.option-grid {
+  display: grid;
+  grid-template-rows: auto auto; /* 2행 고정 */
+  gap: 12px;
+}
+
+/* ===== 팝업 연동 스토리보드 설명 (우측 고정) ===== */
+.storyboard-desc.floating {
+  display: none;   /* 기본은 숨김 */
+  position: fixed;
+  top: 120px;
+  right: 24px;
+
+  width: 360px;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+
+  box-shadow: 0 12px 32px rgba(0,0,0,.18);
+
+  z-index: 1001; /* ⭐ 팝업 배경보다 위 */
+}
+
+/* 오버레이 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 999;
+  display: none;
+}
+
+.modal-overlay.show {
+  display: block;
+}
+
+/* 팝업 */
+.popup-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 860px;
+  height: 80vh;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 12px;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+}
+
+.popup-modal.show {
+  display: flex;
+}
+
+/* 헤더 */
+.modal-header {
+  position: relative;
+  padding: 16px 56px 16px 24px; /* ⬅ 오른쪽 여백 확보 */
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ⬅ 제목 중앙 */
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%); /* ⬅ 세로 중앙 */
+
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f3f4f6;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.close-btn:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+/* 본문 */
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 섹션 박스 */
+.setting-box {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #f9fafb;
+}
+
+.setting-box h3 {
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.criteria-options {
+  display: none;
+  margin-top: 12px;
+  justify-content: center;
+  gap: 24px;
+  font-size: 14px;
+}
+
+/* 토글 ON 시에만 노출 */
+.setting-box.open .criteria-options {
+  display: flex;
+}
+
+/* 옵션 정렬 */
+.option-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 평가 구분, 기간 설정 가운데 정렬 */
+.setting-box .option-row {
+  justify-content: center;   /* ⭐ 가운데 정렬 */
+}
+
+/* 플레이스홀더 */
+.placeholder-box {
+  height: 40px;
+  background: #eef2f7;
+  border-radius: 6px;
+}
+
+/* 하단 */
+.modal-footer {
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.primary-btn {
+  padding: 10px 32px;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+}
+
+/* 평가 상태 공통 */
+.eval-status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.eval-all {
+  background: #111;
+  color: #fff;
+}
+
+.eval-planned {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.eval-progress {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.eval-ended {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.eval-draft {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.toggle {
+  margin-left: auto;
+  width: 42px;
+  height: 22px;
+  background: #d1d5db;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: all .2s;
+}
+
+.toggle.on {
+  background: #2563eb;
+}
+
+.toggle.on::after {
+  left: 22px;
+}
+
+/* ===== 삭제 검토 오버레이 ===== */
+.deprecated {
+  position: relative;
+  opacity: 0.4;              /* 박스 비활성 느낌 */
+  pointer-events: none;      /* 입력 불가 */
+}
+
+.deprecated {
+  position: relative;
+  pointer-events: none;
+}
+
+/* 실제 오버레이 */
+.deprecated::after {
+  content: '기능 제거 ((기간 설정) 영역에 기능 흡수) 검토';
+  position: absolute;
+  inset: 0;
+
+  background: rgba(104, 104, 104, 0.48); /* 배경만 반투명 */
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;            /* ← 이제 완전 선명 */
+
+  border-radius: 10px;
+  text-align: center;
+  padding: 16px;
+
+  z-index: 2;
+}
+
+/* 기존 박스 콘텐츠 흐리게 */
+.deprecated > * {
+  opacity: 0.3;
+}
+
+.advanced-content {
+  overflow: hidden;
+  transition: max-height .3s ease;
+  max-height: 2000px; /* 충분히 큰 값 */
+}
+
+.advanced-content.collapsed {
+  max-height: 0;
+}
+
+.modal-body {
+  flex: 1;
+  overflow: hidden;   /* ⭐ body 자체는 스크롤 없음 */
+}
+
+.modal-scroll-area {
+  height: 100%;
+  overflow-y: auto;   /* ⭐ 여기서만 스크롤 */
+  padding: 16px 24px;
+}
+
+.advanced-toggle {
+  text-align: center;
+  margin: 12px 0;
+}
+
+.eval-title-input {
+  flex: 1;                 /* 남는 영역 전부 사용 */
+  min-width: 0;            /* flex overflow 방지 */
+  padding: 8px 12px;
+  font-size: 14px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
+
+.setting-desc {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.period-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+
+.period-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #fff;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.period-group .label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+.period-group input,
+.period-group select {
+  height: 36px;
+  padding: 0 8px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+}
+
+.period-group input[type="date"] {
+  min-width: 130px;
+}
+
+.unit {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.tilde {
+  flex-shrink: 0;
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+/* 평가 구분 한 줄 정렬 */
+.eval-type-row {
+  justify-content: center;     /* 기존 컨셉 유지 */
+  gap: 20px;
+}
+
+.eval-type-row .setting-title {
+  margin: 0;
+  font-size: 15px;
+  white-space: nowrap;         /* ⭐ 줄바꿈 방지 */
+}
+
+.evaluation-modal {
+  display: none;
+}
+
+.evaluation-modal.show {
+  display: flex;
+}
+
+.task-modal.show {
+  display: flex;
+}
   </style>
 </head>
 <body>
@@ -317,10 +699,10 @@
 <!-- ===== 1단 GNB ===== -->
 <header class="gnb-top">
   <div class="gnb-left">
-    <span class="active">홈</span>
+    <span id="gnb-home" class="active">홈</span>
     <span>교과서</span>
-    <span>과제</span>
-    <span>평가</span>
+    <span id="gnb-task">과제</span>
+    <span id="gnb-eval">평가</span>
     <span>수업 자료실</span>
   </div>
 
@@ -337,14 +719,14 @@
 </header>
 
 <!-- ===== 2단 GNB ===== -->
-<nav class="gnb-sub">
+<nav class="gnb-sub" id="subGnb">
   <span class="active">학급 현황</span>
   <span>대시보드</span>
   <span>리포트</span>
 </nav>
 
 <!-- ===== 메인 영역 (더미) ===== -->
-<main class="content dashboard">
+<main class="content dashboard" id="homePage">
   <!-- 좌측 메인 -->
   <section class="main-area">
     <div class="card notice">
@@ -386,27 +768,49 @@
       </ul>
     </div>
   </aside>
-
-  <div class="card" style="margin-top:32px;">
-  <strong>📘 스토리보드 설명</strong>
-
-  <ul style="font-size:14px; margin-top:12px; line-height:1.6;">
-    <li>
-      <strong>[기능 01]</strong><br />
-      플랫폼 최초 진입 시, 학습 환경 설정 팝업 노출<br />
-      (사용 모드 + 수업 중 알림 허용 여부)
-    </li>
-    <li>
-      <strong>[기능 01-1]</strong><br />
-      LITE 모드 기본 추천, 이후 언제든 설정 변경 가능
-    </li>
-    <li>
-      <strong>[기능 01-2]</strong><br />
-      알림 OFF 시에도 알림 목록은 축적됨 (토스트만 미노출)
-    </li>
-  </ul>
-  </div>
 </main>
+
+<!-- ===== 평가 목록 페이지 ===== -->
+<section id="evaluationPage" style="display:none; padding:32px 24px;">
+
+  <!-- 상단 카드 영역 -->
+  <div style="display:grid; grid-template-columns:240px 1fr 1fr; gap:24px; margin-bottom:32px;">
+    
+    <div style="background:#3b82f6; color:#fff; border-radius:20px; padding:32px; text-align:center;">
+      <div style="font-size:32px; margin-bottom:12px;">＋</div>
+      <strong>새로 만들기</strong>
+    </div>
+
+    <div style="background:#e8fbf2; border-radius:20px; padding:32px; text-align:center;">
+      <strong class="progress-title">진행 중인 평가</strong>
+      <p style="margin-top:12px; font-size:14px;">진행 중인 평가가 없습니다.</p>
+    </div>
+
+    <div style="background:#eaf6ff; border-radius:20px; padding:32px; text-align:center;">
+      <strong class="grading-title">채점이 필요한 평가</strong>
+      <p style="margin-top:12px; font-size:14px;">채점이 필요한 평가가 없습니다.</p>
+    </div>
+  </div>
+
+  <!-- 필터 -->
+  <div style="background:#f5f6f8; padding:16px 24px; border-radius:12px; margin-bottom:24px;">
+  <button class="eval-status eval-all">전체</button>
+  <button class="eval-status eval-planned">예정</button>
+  <button class="eval-status eval-progress">진행 중</button>
+  <button class="eval-status eval-ended">종료</button>
+  <button class="eval-status eval-draft">임시 저장</button>
+</div>
+
+  <!-- 리스트 -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px;">
+    <div style="background:#fff; padding:16px; border-radius:12px;">
+      <span class="eval-status eval-draft">임시 저장</span>
+      <strong style="display:block; margin-top:8px;">자료 새로 만들기 직접 출제 test 1</strong>
+      <p style="font-size:12px; color:#666;">2025-12-23 16:04:45 저장됨</p>
+    </div>
+  </div>
+
+</section>
 
 <!-- ===== 환경 설정 팝업 (스토리보드용) ===== -->
 <div class="modal show" id="modeModal">
@@ -439,6 +843,7 @@
     </p>
     </div>
 
+    <div class="option-grid">
     <div class="mode active" data-mode="lite">
       <strong>🟢 LITE 모드 (기본 추천)</strong>
       <p style="margin:8px 0 0; font-size:13px; color:#555;">
@@ -458,6 +863,7 @@
         문항 구성과 조건을 세부적으로 조정하고 싶은 경우 선택해 주세요.
       </p>
     </div>
+    </div>
 
     <p style="font-size:12px; color:#6b7280; margin-top:8px;">
       · 기본 모드: 모든 옵션 직접 설정<br />
@@ -476,6 +882,7 @@
     </p>
     </div>
 
+    <div class="option-grid">
     <div class="mode active" data-alert="on">
       <strong>🔔 알림 허용</strong>
       <p style="font-size:12px; color:#555;">
@@ -491,57 +898,555 @@
         알림 목록은 그대로 확인할 수 있습니다.
       </p>
     </div>
+    </div>
 
     <p style="font-size:12px; color:#6b7280;">
       ※ 알림 설정은 언제든 설정 메뉴에서 변경할 수 있습니다.
     </p>
   </div>
-
 </div>
 
-<!-- ===== 하단 버튼 ===== -->
-<div class="popup-footer">
-  <button class="confirm">선택 완료</button>
+  <!-- ===== 하단 버튼 ===== -->
+  <div class="popup-footer">
+   <button class="confirm" id="homeConfirm">선택 완료</button>
+  </div>
+ </div>
 </div>
-</div>
+
+<!-- 설명 박스 -->
+  <div class="card storyboard-desc" id="storyboardDesc" style="margin-top:32px;">
+  <strong>📘 스토리보드 설명</strong>
+
+  <ul style="font-size:14px; margin-top:12px; line-height:1.6;">
+    <li>
+      <strong>[기능 01]</strong><br />
+      플랫폼 최초 진입 시, 학습 환경 설정 팝업 노출<br />
+      (사용 모드 + 수업 중 알림 허용 여부)
+    </li>
+    <li>
+      <strong>[기능 01-1]</strong><br />
+      LITE 모드 기본 추천, 이후 언제든 설정 변경 가능
+    </li>
+    <li>
+      <strong>[기능 01-2]</strong><br />
+      알림 OFF 시에도 알림 목록은 축적됨 (토스트만 미노출)
+    </li>
+  </ul>
+  </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ===== DOM ===== */
   const modal = document.getElementById('modeModal');
+  const storyboardDesc = document.getElementById('storyboardDesc');
   const openSetting = document.getElementById('openSetting');
+
+  const homePage = document.getElementById('homePage');
+  const evaluationPage = document.getElementById('evaluationPage');
+
+  const homeBtn = document.getElementById('gnb-home');
+  const evalBtn = document.getElementById('gnb-eval');
+  const subGnb = document.getElementById('subGnb');
+
+  const progressTitle = document.querySelector('.progress-title');
+  const gradingTitle = document.querySelector('.grading-title');
+
+  const taskBtn = document.getElementById('gnb-task');
+  const pageTitle = document.getElementById('pageTitle');
 
   let selectedMode = 'lite';
   let alertSetting = 'on';
 
-  // QA용: 페이지 진입 시 항상 팝업 노출
+  /* ===== 초기 상태 ===== */
+  // 홈 진입 시
   modal.classList.add('show');
+  storyboardDesc.style.display = 'block';
+  storyboardDesc.classList.add('floating');
 
+  /* ===== 설정 버튼 ===== */
   openSetting.onclick = () => {
     modal.classList.add('show');
+    storyboardDesc.classList.add('floating');
   };
 
-  // 모드 / 알림 선택 처리
-  document.querySelectorAll('.mode').forEach(el => {
-    el.onclick = () => {
-      const parent = el.parentElement;
-      const group = el.dataset.mode ? 'mode' : 'alert';
+  /* ===== 모드 선택 ===== */
+  const homeConfirm = document.getElementById('homeConfirm');
 
-      parent.querySelectorAll(`[data-${group}]`).forEach(m =>
-        m.classList.remove('active')
-      );
+homeConfirm.onclick = () => {
+  localStorage.setItem('aidt_mode', selectedMode);
+  localStorage.setItem('aidt_alert', alertSetting);
 
-      el.classList.add('active');
+  modal.classList.remove('show');
+  storyboardDesc.style.display = 'none';
+  storyboardDesc.classList.remove('floating');
+};
 
-      if (el.dataset.mode) selectedMode = el.dataset.mode;
-      if (el.dataset.alert) alertSetting = el.dataset.alert;
-    };
+  /* ===== 평가 기준 설정 초기 상태 동기화 ===== */
+const criteriaToggle = document.getElementById('criteriaToggle');
+const criteriaBox = criteriaToggle?.closest('.setting-box');
+
+if (criteriaToggle && criteriaBox) {
+
+  // 초기 동기화
+  if (criteriaToggle.classList.contains('on')) {
+    criteriaBox.classList.add('open');
+  }
+
+  criteriaToggle.onclick = (e) => {
+    e.stopPropagation();
+
+    const isOn = criteriaToggle.classList.toggle('on');
+
+    if (isOn) {
+      criteriaBox.classList.add('open');
+    } else {
+      criteriaBox.classList.remove('open');
+    }
+  };
+}
+
+  /* ===== 공통 토글 클릭 처리 ===== */
+ document.querySelectorAll('.toggle').forEach(toggle => {
+
+    // ❗ 평가 기준 토글은 제외
+  if (toggle.id === 'criteriaToggle') return;
+
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();        // 부모 클릭 이벤트 차단
+    toggle.classList.toggle('on');
   });
+ });
 
-  document.querySelector('.confirm').onclick = () => {
-    localStorage.setItem('aidt_mode', selectedMode);
-    localStorage.setItem('aidt_alert', alertSetting);
-    modal.classList.remove('show');
+  /* ===== 학습 환경 설정 완료 ===== */
+  document.querySelectorAll('.confirm').forEach(btn => {
+  btn.onclick = () => {
+  localStorage.setItem('aidt_mode', selectedMode);
+  localStorage.setItem('aidt_alert', alertSetting);
+
+  modal.classList.remove('show');
+  storyboardDesc.style.display = 'none';   // ⭐ 추가
+};
+});
+
+function hideAllSettingModals() {
+  const evaluationOverlay = document.getElementById('evaluationOverlay');
+  const evaluationModal = document.getElementById('evaluationModal');
+  const taskOverlay = document.getElementById('taskOverlay');
+  const taskModal = document.getElementById('taskModal');
+
+  if (taskOverlay) taskOverlay.classList.remove('show');
+  if (taskModal) taskModal.classList.remove('show');
+  if (evaluationOverlay) evaluationOverlay.classList.remove('show');
+  if (evaluationModal) evaluationModal.classList.remove('show');
+
+  // 🔥 이거 추가
+  const modeModal = document.getElementById('modeModal');
+  const storyboardDesc = document.getElementById('storyboardDesc');
+
+  if (modeModal) modeModal.classList.remove('show');
+  if (storyboardDesc) {
+    storyboardDesc.style.display = 'none';
+    storyboardDesc.classList.remove('floating');
+  }
+}
+
+  /* ===== 평가 진입 ===== */
+  evalBtn.onclick = () => {
+  hideAllSettingModals(); // ← 이것만 추가
+  // 🔥 학습 환경 설정 팝업 강제 종료
+  modal.classList.remove('show');
+  storyboardDesc.style.display = 'none';
+  storyboardDesc.classList.remove('floating');
+
+  homePage.style.display = 'none';
+  evaluationPage.style.display = 'block';
+
+  document.querySelectorAll('.gnb-left span')
+    .forEach(s => s.classList.remove('active'));
+  evalBtn.classList.add('active');
+
+  subGnb.innerHTML = `<span class="active">평가 목록 보기</span>`;
+
+  progressTitle.textContent = '진행 중인 평가';
+  gradingTitle.textContent = '채점이 필요한 평가';
+
+  const evaluationOverlay = document.getElementById('evaluationOverlay');
+  const evaluationModal = document.getElementById('evaluationModal');
+
+  evaluationOverlay.classList.add('show');
+  evaluationModal.classList.add('show');
+};
+
+    storyboardDesc.style.display = 'block';
+    storyboardDesc.classList.add('floating');
+
+  /* ===== 과제 진입 ===== */
+  taskBtn.onclick = () => {
+  hideAllSettingModals();
+
+  homePage.style.display = 'none';
+  evaluationPage.style.display = 'block';
+
+  document.querySelectorAll('.gnb-left span')
+    .forEach(s => s.classList.remove('active'));
+  taskBtn.classList.add('active');
+
+  subGnb.innerHTML = `
+    <span class="active">과제 목록 보기</span>
+    <span>과제 게시판</span>
+  `;
+
+  progressTitle.textContent = '진행 중인 과제';
+  gradingTitle.textContent = '채점이 필요한 과제';
+
+  document.getElementById('taskOverlay').classList.add('show');
+  document.getElementById('taskModal').classList.add('show');
+};
+
+  /* ===== 홈 복귀 ===== */
+  homeBtn.onclick = () => {
+    evaluationPage.style.display = 'none';
+    homePage.style.display = 'flex';
+
+    document.querySelectorAll('.gnb-left span')
+      .forEach(s => s.classList.remove('active'));
+    homeBtn.classList.add('active');
+
+    subGnb.innerHTML = `
+      <span class="active">학급 현황</span>
+      <span>대시보드</span>
+      <span>리포트</span>
+    `;
+
+    modal.classList.add('show');
+    storyboardDesc.style.display = 'block';
+    storyboardDesc.classList.add('floating');
   };
+
+/* ===== 평가 팝업 접힘/펼침 ===== */
+const advancedContent = document.querySelector('.advanced-content');
+const toggleAdvancedBtn = document.getElementById('toggleAdvanced');
+
+toggleAdvancedBtn.onclick = () => {
+  advancedContent.classList.toggle('collapsed');
+
+  toggleAdvancedBtn.textContent =
+    advancedContent.classList.contains('collapsed')
+      ? '상세 설정 펼치기'
+      : '상세 설정 접기';
+};
+
+/* ===== LITE 모드 기본값 적용 ===== */
+  function applyLiteDefaults() {
+    if (selectedMode !== 'lite') return;
+
+    document
+      .querySelectorAll('#liteAdvancedGroup .toggle')
+      .forEach(t => t.classList.add('on'));
+
+    const defaultCriteria =
+      document.querySelector('input[name="criteria"][value="level"]');
+    if (defaultCriteria) defaultCriteria.checked = true;
+  }
+
+});
+/* ===== 평가 팝업 닫기 ===== */
+function closeEvaluationModal() {
+  document.getElementById('evaluationModal').classList.remove('show');
+  document.getElementById('evaluationOverlay').classList.remove('show');
+
+  const desc = document.getElementById('storyboardDesc');
+  desc.style.display = 'none';
+  desc.classList.remove('floating');
+}
 </script>
+
+<script>
+function closeTaskModal() {
+  document.getElementById('taskModal').classList.remove('show');
+  document.getElementById('taskOverlay').classList.remove('show');
+}
+</script>
+
+
+<!-- 평가 자료 설정 팝업 -->
+<div class="modal modal-overlay" id="evaluationOverlay"></div>
+
+<div class="popup-modal" id="evaluationModal">
+  <div class="modal-header">
+    <h2>자료 설정</h2>
+    <button class="close-btn" onclick="closeEvaluationModal()" aria-label="닫기">
+     ×
+   </button>
+  </div>
+
+  <div class="modal-body">
+
+    <!-- 🔽 스크롤 대상 -->
+   <div class="modal-scroll-area">
+
+    <!-- 1. 평가 구분 -->
+    <section class="setting-box">
+     <div class="option-row eval-type-row">
+       <h3 class="setting-title">평가 구분</h3>
+
+       <label><input type="radio" name="evalType"> 진단 평가</label>
+       <label><input type="radio" name="evalType"> 형성 평가</label>
+       <label><input type="radio" name="evalType"> 총괄 평가</label>
+       <label><input type="radio" name="evalType"> 수행 평가</label>
+      </div>
+    </section>
+
+    <!-- 2. 평가명 -->
+    <section class="setting-box">
+     <div class="option-row">
+     <h3 style="margin:0; white-space:nowrap;">평가명</h3>
+
+     <input
+      type="text"
+      placeholder="평가명을 입력하세요"
+      class="eval-title-input"
+      />
+     </div>
+    </section>
+
+    <!-- 3. 기간 설정 -->
+    <section class="setting-box">
+     <h3>기간 설정</h3>
+
+     <!-- 🔹 세부 설명 -->
+     <p style="font-size:12px; color:#6b7280; margin-bottom:8px;">
+       설정 시 지정한 기간 내에만 응시 가능하며, 미설정시 수업 중 원하는 때에 응시를 시작할 수 있습니다.<br />
+       응시 기간이 마감되면 응시 중인 학생들의 평가가 자동 제출됩니다.
+     </p>
+
+      <div class="period-row">
+    <!-- 시작 -->
+    <div class="period-group">
+      <span class="label">시작</span>
+      <input type="date" />
+      <select>
+        <option>00</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option>
+        <!-- 00~23 -->
+      </select>
+      <span class="unit">시</span>
+      <select>
+        <option>00</option><option>05</option><option>10</option><option>15</option><option>20</option><option>25</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>55</option>
+        <!-- 00~59 -->
+      </select>
+      <span class="unit">분</span>
+    </div>
+
+    <span class="tilde">~</span>
+
+    <!-- 종료 -->
+    <div class="period-group">
+      <span class="label">종료</span>
+      <input type="date" />
+      <select>
+        <option>00</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option>
+        <!-- 00~23 -->
+      </select>
+      <span class="unit">시</span>
+      <select>
+        <option>00</option><option>05</option><option>10</option><option>15</option><option>20</option><option>25</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>55</option>
+        <!-- 00~59 -->
+      </select>
+      <span class="unit">분</span>
+    </div>
+  </div>
+</section>
+
+    <!-- 4. 타이머 설정 -->
+    <section class="setting-box deprecated">
+       <h3>타이머 설정</h3>
+
+        <!-- 🔹 세부 설명 -->
+       <p style="font-size:12px; color:#6b7280; margin-bottom:8px;">
+         응시 시간을 시/분/초 단위로 제한할 수 있습니다.<br />
+         타이머가 종료되면 응시 중인 학생들의 평가가 자동 제출됩니다.
+       </p>
+       
+      <div class="option-row">
+        <input type="number" placeholder="시" />
+        <input type="number" placeholder="분" />
+        <input type="number" placeholder="초" />
+      </div>
+    </section>
+
+<section class="setting-box-group collapsed" id="liteAdvancedGroup">
+  <div class="advanced-content collapsed">
+    <!-- 5. 리포트 자동 공유 -->
+    <section class="setting-box">
+  <div class="option-row">
+    <div>
+      <h3>리포트 자동 공유</h3>
+      <p style="font-size:12px; color:#6b7280;">
+        응시가 끝나면 학생들에게 결과 리포트가 자동 공유됩니다.
+      </p>
+    </div>
+    <div class="toggle on"></div>
+  </div>
+ </section>
+
+    <!-- 6. AI 튜터 -->
+    <section class="setting-box">
+  <div class="option-row">
+    <div>
+      <h3>AI 튜터 설정</h3>
+      <p style="font-size:12px; color:#6b7280;">
+        On 시, 학생들이 응시 중 [AI 튜터]를 사용할 수 있습니다.
+      </p>
+    </div>
+    <div class="toggle on"></div>
+  </div>
+ </section>
+
+    <!-- 7. 평가 기준 설정 -->
+    <section class="setting-box">
+  <div class="option-row">
+    <div>
+      <h3>평가 기준 설정</h3>
+      <p style="font-size:12px; color:#6b7280;">
+        On시, 응시 결과로 학생들에게 노출되는 평가 기준을 설정할 수 있습니다.<br />
+        Off시, 응시 결과로 완료 여부가 노출됩니다.
+      </p>
+    </div>
+    <div class="toggle on" id="criteriaToggle"></div>
+  </div>
+
+   <!-- ✅ ON 시 노출될 옵션 -->
+  <div class="criteria-options">
+    <label>
+      <input type="radio" name="criteria" value="level" checked />
+      상 / 중 / 하
+    </label>
+    <label>
+      <input type="radio" name="criteria" value="passfail" />
+      통과 / 실패
+    </label>
+    <label>
+      <input type="radio" name="criteria" value="score" />
+      점수
+    </label>
+  </div>
+ </section>
+
+    <!-- 8. 내 자료 저장 -->
+    <section class="setting-box">
+  <div class="option-row">
+    <div>
+      <h3>[내 자료]에 저장</h3>
+      <p style="font-size:12px; color:#6b7280;">
+        설정한 평가를 [내 자료]에 저장합니다.
+      </p>
+    </div>
+    <div class="toggle on"></div>
+  </div>
+ </section>
+</div>
+</section>
+
+<!-- 펼침 버튼 -->
+<div style="text-align:center; margin-top:12px;">
+  <button id="toggleAdvanced"
+          style="border:none; background:none; color:#2563eb; font-size:13px;">
+    상세 설정 펼치기
+  </button>
+</div>
+</div>
+</div>
+
+  <div class="modal-footer">
+    <button class="primary-btn" onclick="closeEvaluationModal()">설정 완료</button>
+  </div>
+
+<!-- ===== 과제 자료 설정 팝업 ===== -->
+<div class="modal modal-overlay" id="taskOverlay"></div>
+
+<div class="popup-modal" id="taskModal">
+  <div class="modal-header">
+    <h2>과제 자료 설정</h2>
+    <button class="close-btn" onclick="closeTaskModal()" aria-label="닫기">×</button>
+  </div>
+
+  <div class="modal-body">
+    <div class="modal-scroll-area">
+      <!-- 1. 과제 구분 -->
+      <section class="setting-box">
+        <div class="option-row eval-type-row">
+          <h3 class="setting-title">과제 구분</h3>
+
+          <label><input type="radio" name="taskType"> 진단 과제</label>
+          <label><input type="radio" name="taskType"> 형성 과제</label>
+          <label><input type="radio" name="taskType"> 수행 과제</label>
+        </div>
+      </section>
+
+      <!-- 2. 과제명 -->
+      <section class="setting-box">
+        <div class="option-row">
+          <h3 style="margin:0; white-space:nowrap;">과제명</h3>
+          <input type="text" placeholder="과제명을 입력하세요" class="eval-title-input" />
+        </div>
+      </section>
+
+      <!-- 3. 제출 기간 설정 -->
+      <section class="setting-box">
+        <h3>제출 기간 설정</h3>
+        <p style="font-size:12px; color:#6b7280; margin-bottom:8px;">
+          설정 시 지정한 기간 내에만 제출 가능하며, 미설정 시 과제 제출은 자유롭게 가능합니다.
+        </p>
+
+        <div class="period-row">
+          <!-- 시작 -->
+          <div class="period-group">
+            <span class="label">시작</span>
+            <input type="date" />
+            <select>
+              <option>00</option><option>01</option><option>02</option><!-- ... 23시까지 -->
+            </select>
+            <span class="unit">시</span>
+            <select>
+              <option>00</option><option>05</option><option>10</option><!-- ... 55분까지 -->
+            </select>
+            <span class="unit">분</span>
+          </div>
+
+          <span class="tilde">~</span>
+
+          <!-- 종료 -->
+          <div class="period-group">
+            <span class="label">종료</span>
+            <input type="date" />
+            <select>
+              <option>00</option><option>01</option><option>02</option><!-- ... 23시까지 -->
+            </select>
+            <span class="unit">시</span>
+            <select>
+              <option>00</option><option>05</option><option>10</option><!-- ... 55분까지 -->
+            </select>
+            <span class="unit">분</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. 추가 옵션 -->
+      <section class="setting-box">
+        <div class="option-row">
+          <h3>제출 후 자동 채점</h3>
+          <div class="toggle on"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- 하단 버튼 -->
+  <div class="modal-footer">
+    <button class="confirm">선택 완료</button>
+  </div>
+</div>
 
 </body>
 </html>
