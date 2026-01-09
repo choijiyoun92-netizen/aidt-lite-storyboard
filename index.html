@@ -692,6 +692,35 @@
 .task-modal.show {
   display: flex;
 }
+
+/* ===== iframe 팝업 ===== */
+.iframe-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000; /* ⭐ 기존 모든 팝업보다 위 */
+}
+
+.iframe-overlay.show {
+  display: flex;
+}
+
+.iframe-popup {
+  width: 860px;
+  height: 80vh;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.iframe-content {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
   </style>
 </head>
 <body>
@@ -949,6 +978,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const evalBtn = document.getElementById('gnb-eval');
   const subGnb = document.getElementById('subGnb');
 
+  const homeworkModal = document.getElementById('homeworkModal');
+
   const progressTitle = document.querySelector('.progress-title');
   const gradingTitle = document.querySelector('.grading-title');
 
@@ -973,14 +1004,45 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ===== 모드 선택 ===== */
   const homeConfirm = document.getElementById('homeConfirm');
 
-homeConfirm.onclick = () => {
+  homeConfirm.onclick = () => {
   localStorage.setItem('aidt_mode', selectedMode);
   localStorage.setItem('aidt_alert', alertSetting);
 
   modal.classList.remove('show');
   storyboardDesc.style.display = 'none';
   storyboardDesc.classList.remove('floating');
-};
+  };
+
+  /* ===== 사용 모드 선택 ===== */
+  document.querySelectorAll('[data-mode]').forEach(card => {
+  card.addEventListener('click', () => {
+
+    // active 초기화
+    document
+      .querySelectorAll('[data-mode]')
+      .forEach(c => c.classList.remove('active'));
+
+    // 현재 선택 활성화
+    card.classList.add('active');
+
+    // 상태값 갱신
+    selectedMode = card.dataset.mode;
+  });
+ });
+
+ /* ===== 수업 중 알림 설정 ===== */
+  document.querySelectorAll('[data-alert]').forEach(card => {
+  card.addEventListener('click', () => {
+
+    document
+      .querySelectorAll('[data-alert]')
+      .forEach(c => c.classList.remove('active'));
+
+    card.classList.add('active');
+
+    alertSetting = card.dataset.alert; // on / off
+  });
+ });
 
   /* ===== 평가 기준 설정 초기 상태 동기화 ===== */
 const criteriaToggle = document.getElementById('criteriaToggle');
@@ -1034,13 +1096,13 @@ function hideAllSettingModals() {
   const evaluationModal = document.getElementById('evaluationModal');
   const taskOverlay = document.getElementById('taskOverlay');
   const taskModal = document.getElementById('taskModal');
+  const homeworkModal = document.getElementById('homeworkModal');
 
   if (taskOverlay) taskOverlay.classList.remove('show');
   if (taskModal) taskModal.classList.remove('show');
   if (evaluationOverlay) evaluationOverlay.classList.remove('show');
   if (evaluationModal) evaluationModal.classList.remove('show');
 
-  // 🔥 이거 추가
   const modeModal = document.getElementById('modeModal');
   const storyboardDesc = document.getElementById('storyboardDesc');
 
@@ -1085,6 +1147,9 @@ function hideAllSettingModals() {
   taskBtn.onclick = () => {
   hideAllSettingModals();
 
+  // ⭐ 여기서만 연다
+  homeworkModal.classList.add('show');
+
   homePage.style.display = 'none';
   evaluationPage.style.display = 'block';
 
@@ -1099,9 +1164,6 @@ function hideAllSettingModals() {
 
   progressTitle.textContent = '진행 중인 과제';
   gradingTitle.textContent = '채점이 필요한 과제';
-
-  document.getElementById('taskOverlay').classList.add('show');
-  document.getElementById('taskModal').classList.add('show');
 };
 
   /* ===== 홈 복귀 ===== */
@@ -1445,6 +1507,17 @@ function closeTaskModal() {
   <!-- 하단 버튼 -->
   <div class="modal-footer">
     <button class="confirm">선택 완료</button>
+  </div>
+</div>
+
+<!-- ===== 과제 homework iframe 팝업 ===== -->
+<div id="homeworkModal" class="iframe-overlay">
+  <div class="iframe-popup">
+    <iframe
+      src="homework.html"
+      frameborder="0"
+      class="iframe-content"
+    ></iframe>
   </div>
 </div>
 
