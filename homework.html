@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>자료 설정</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+
+      /* 🔥 추가 */
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     min-height: 100vh;   /* ✅ 이 줄 추가 */
+    }
+
+    .popup {
+     width: 860px;
+     height: 720px;          /* ⭐ 펼쳤을 때 기준으로 고정 */
+     background: #fff;
+     border-radius: 14px;
+     overflow: hidden;       /* 중요 */
+     display: flex;
+     flex-direction: column;
+    }
+
+    .popup-header {
+      position: relative;
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .popup-header button {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      border: none;
+      background: #f3f4f6;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .popup-body {
+     padding: 24px;
+     display: flex;
+     flex-direction: column;
+     gap: 16px;
+
+     flex: 1;
+     overflow-y: hidden;   /* ⭐ 기본은 스크롤 없음 */
+    }
+
+    /* 헤더/푸터 고정 */
+   .popup-header,
+   .popup-footer {
+   flex-shrink: 0;
+   }
+
+   #detailArea {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+    .section {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* 1️⃣ 평가명 1줄 정렬 */
+    .inline-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* 평가명 타이틀 줄바꿈 방지 */
+   .inline-row .section-title {
+   white-space: nowrap;   /* 줄바꿈 방지 */
+   min-width: 72px;       /* 타이틀 영역 고정 */
+   }
+
+   /* 입력창은 나머지 영역만 차지 */
+   .inline-row .input {
+   flex: 1;               /* width:100% 대신 */
+   }
+
+    .input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+
+    .period-desc {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .period-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    .date-input,
+    .time-select {
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 0 8px;
+    }
+
+    .disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+    }
+
+    /* 상세 설정 토글 */
+    .expand {
+      text-align: center;
+      font-size: 13px;
+      color: #2563eb;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .detail {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    /* 토글 스위치 */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toggle {
+      position: relative;
+      width: 42px;
+      height: 22px;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #d1d5db;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      top: 2px;
+      left: 2px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .toggle input:checked + .slider {
+      background: #2563eb;
+    }
+
+    .toggle input:checked + .slider::before {
+      transform: translateX(20px);
+    }
+
+    .desc {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    /* 타이머 설정 섹션도 오버레이 기준 */
+   .timer-section {
+    position: relative;
+    }
+
+    /* 2️⃣ 출제 대상 오버레이 */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      border-radius: 10px;
+      z-index: 10;
+    }
+
+    /* 출제 대상 섹션만 오버레이 기준 */
+   .target-section {
+   position: relative;
+   }
+
+    .student-grid {
+      margin-top: 8px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px 12px;
+      font-size: 13px;
+    }
+
+    .student-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .popup-footer {
+      padding: 20px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="popup">
+    <div class="popup-header">
+      자료 설정
+      <button
+  class="close-btn"
+  onclick="parent.document.getElementById('homeworkModal').classList.remove('show')">
+  ×
+</button>
+    </div>
+
+    <div class="popup-body">
+      <!-- 기본 영역 (디폴트 노출) -->
+      <div class="section">
+        <div class="inline-row">
+        <div class="section-title">과제명</div>
+        <input class="input" placeholder="과제명을 입력하세요." />
+       </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">기간 설정</div>
+        <div class="period-desc">
+          과제의 응시 기간을 설정할 수 있습니다. </br>
+          응시 기간이 마감되면 응시 중인 학생들의 과제가 자동 제출됩니다.
+        </div>
+        <div class="period-row">
+          시작 <input type="date" class="date-input" />
+          <select class="time-select"><option>00</option></select> 시
+          <select class="time-select"><option>00</option></select> 분
+          ~ 종료 <input type="date" class="date-input" />
+          <select class="time-select"><option>00</option></select> 시
+          <select class="time-select"><option>00</option></select> 분
+        </div>
+      </div>
+
+      <div class="section disabled timer-section">
+  <div class="section-title">타이머 설정</div>
+
+  <div class="overlay">기능 제거 (기간 설정 영역에 기능 흡수) 검토</div>
+
+  <div class="desc">
+    기능 제거 (기간 설정 영역에 기능 흡수) 검토
+  </div>
+</div>
+
+      <!-- 상세 설정 -->
+       <div class="detail" id="detailArea">
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">리포트 자동 공유 설정</div>
+            <label class="toggle">
+              <input type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="desc">응시가 끝나면 학생들에게 결과 리포트가 자동 공유됩니다.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">AI 튜터 설정</div>
+            <label class="toggle">
+              <input type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="desc">On 시, 학생들이 응시 중 [AI 튜터]를 사용할 수 있습니다.</div>
+        </div>
+
+        <div class="section target-section">
+  <div class="target-header">
+    <div class="section-title">출제 대상</div>
+    <div class="overlay">기능 제거 검토</div>
+    <button class="reset-btn" onclick="resetSelection()">설정 초기화</button>
+  </div>
+
+  <div class="desc">과제 출제 대상을 변경할 수 있습니다.</div>
+
+  <label class="student-item" style="margin-top:6px;">
+    <input type="checkbox" id="selectAll" onchange="toggleAll(this)" />
+    전체 선택
+  </label>
+
+  <div class="student-grid">
+    <label class="student-item"><input type="checkbox" class="student" /> 김학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 이학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 박학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 최학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 정학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 한학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 윤학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 오학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 서학생</label>
+    <label class="student-item"><input type="checkbox" class="student" /> 신학생</label>
+  </div>
+</div>
+
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">[내 자료]에 저장</div>
+            <label class="toggle">
+              <input type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="desc">설정한 과제를 [내 자료]에 저장합니다.</div>
+        </div>
+      </div>
+
+      <div class="expand" id="detailToggle" onclick="toggleDetail()">상세 설정 펼치기</div>
+    </div>
+
+    <div class="popup-footer">
+      <button class="btn-primary">설정 완료</button>
+    </div>
+  </div>
+
+<script>
+function toggleDetail() {
+  const detail = document.getElementById("detailArea");
+  const toggleBtn = document.getElementById("detailToggle");
+  const popupBody = document.querySelector(".popup-body");
+
+  const isOpen = detail.style.display === "flex";
+
+  if (isOpen) {
+    detail.style.display = "none";
+    toggleBtn.textContent = "상세 설정 펼치기";
+    popupBody.style.overflowY = "hidden";   // ⭐ 접힘 → 스크롤 OFF
+  } else {
+    detail.style.display = "flex";
+    toggleBtn.textContent = "상세 설정 접기";
+    popupBody.style.overflowY = "auto";     // ⭐ 펼침 → 스크롤 ON
+  }
+}
+</script>
+</body>
+</html>
